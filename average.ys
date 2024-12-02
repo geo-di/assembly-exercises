@@ -1,0 +1,20 @@
+main:
+    irmovq    $1, %rbx
+    irmovq    $0, %rsi
+loop:
+    popq    %r8
+    addq    %r8, %rdi
+    addq    %rbx, %rsi
+    rrmovq  %rbp, %r9
+    subq    %rsp, %r9
+    jne loop
+divloop:
+    subq    %rsi, %rdi
+    jge div
+    halt
+div:
+    addq     %rbx, %rax
+    jmp divloop
+
+    
+    halt

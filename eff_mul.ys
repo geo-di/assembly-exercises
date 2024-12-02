@@ -1,0 +1,23 @@
+main:
+    irmovq $0, %rax     # result
+    irmovq $1, %rsi     # mask
+
+loop:
+    rrmovq %r12, %r9
+    subq %rsi, %r9
+    jl end
+    
+    rrmovq %r12, %r9
+    andq %rsi, %r9
+    je shifting
+    
+    addq %r11, %rax
+    
+shifting:
+    addq %r11, %r11
+    addq %rsi, %rsi
+    jmp loop
+    
+end:
+    halt
+    

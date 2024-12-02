@@ -1,0 +1,28 @@
+main:
+    popq %r8
+    rrmovq %r8, %rsi
+    rrmovq %r8, %rdi
+    rrmovq  %rbp, %r9
+    subq    %rsp, %r9
+    jne loop
+    jmp done    
+loop:
+    popq    %r8
+    rrmovq %rsi, %rbx
+    subq %r8, %rbx
+    jg addmin
+    rrmovq %rdi, %rdx
+    subq %r8, %rdx
+    jl addmax
+checkstack:
+    rrmovq  %rbp, %r9
+    subq    %rsp, %r9
+    jne loop
+done:
+    halt
+addmin:
+    rrmovq %r8, %rsi
+    jmp checkstack
+addmax:
+    rrmovq %r8, %rdi
+    jmp checkstack

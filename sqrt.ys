@@ -1,0 +1,152 @@
+main:
+    irmovq stack,%rbp  
+    irmovq stack,%rsp
+    
+    #r12 = num
+    irmovq $0x4000, %rdx    #bit
+    irmovq $4, %r8          
+    irmovq $1, %r9              
+    irmovq $2, %r10
+    irmovq $20, %r11
+    irmovq $40, %rdi
+    irmovq $10, %rsi
+    irmovq $5, %r13
+    irmovq $0, %rcx         #result
+    
+size_bit:
+
+    rrmovq %rdx, %r14
+    subq %r12, %r14       
+    jle loop    
+    
+    irmovq $0, %rax
+    call loop_bit 
+    
+    jmp size_bit
+    
+loop:
+    andq %rdx, %rdx
+    jne if
+    halt
+
+if:
+
+    rrmovq %rcx, %rax
+    addq %rdx, %rax
+    rrmovq %r12, %rbx
+    subq %rax, %rbx
+    jl else
+    
+    subq %rax, %r12
+    irmovq $0, %rax
+    call loop_res
+    
+    addq %rdx, %rcx
+    jmp end
+    
+else:
+
+    irmovq $0, %rax
+    call loop_res
+    
+end:
+
+    irmovq $0, %rax
+    call loop_bit
+    
+    jmp loop
+
+.pos 0x900
+loop_res:
+
+    irmovq $200, %r11
+    subq %r11, %rcx
+    jge div_res_huge
+    
+    addq %r11, %rcx
+    irmovq $20 ,%r11
+    subq %r11, %rcx
+    jge div_res_big
+    
+    addq %r11, %rcx
+    subq %rsi, %rcx
+    jge div_res_mid
+    
+    addq %rsi, %rcx
+    subq %r10, %rcx
+    jge div_res
+    
+    rrmovq %rax, %rcx
+    ret
+    
+div_res_huge:
+
+    irmovq $100, %rsi
+    addq     %rsi, %rax
+    irmovq $10, %rsi
+    jmp loop_res
+
+div_res_big:
+
+    addq     %rsi, %rax
+    jmp loop_res
+    
+div_res_mid:
+
+    addq     %r13, %rax
+    jmp loop_res
+    
+div_res:
+
+    addq     %r9, %rax
+    jmp loop_res
+
+
+.pos 0x800
+loop_bit:
+    
+    irmovq $400, %rdi
+    subq %rdi, %rdx
+    jge div_bit_huge
+    
+    addq %rdi, %rdx
+    irmovq $40, %rdi
+    subq %rdi, %rdx
+    jge div_bit_big
+    
+    addq %rdi, %rdx
+    subq %r11, %rdx
+    jge div_bit_mid
+    
+    addq %r11, %rdx
+    subq %r8, %rdx
+    jge div_bit
+    
+    rrmovq %rax, %rdx
+    ret
+    
+div_bit_huge:
+
+    irmovq $100, %rsi
+    addq     %rsi, %rax
+    irmovq $10, %rsi
+    jmp loop_bit
+
+div_bit_big:
+
+    addq     %rsi, %rax
+    jmp loop_bit
+    
+div_bit_mid:
+
+    addq     %r13, %rax
+    jmp loop_bit
+    
+div_bit:
+
+    addq     %r9, %rax
+    jmp loop_bit
+    
+.pos 0x400
+stack:
+

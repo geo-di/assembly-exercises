@@ -1,0 +1,15 @@
+main:
+    irmovq $0x0400, %rdx
+loop:
+    irmovq $1, %r8
+    irmovq $8, %r9
+    mrmovq (%rdx), %rbx       
+    andq %rbx, %rbx           
+    jne add            
+    halt
+add:
+    addq %r8, %rax             
+    addq %r9, %rdx             
+    jmp loop           
+          
+

@@ -1,0 +1,15 @@
+main:
+    rrmovq %r13, %rdi
+    irmovq $4096, %rsi
+    irmovq $1, %rbx
+E:
+    subq    %rsi, %rdi
+    jge div
+    jmp R
+div:
+    addq     %rbx, %r14
+    jmp E
+R:
+    irmovq $0x0FFF, %rcx
+    andq %rcx, %r13
+    halt
